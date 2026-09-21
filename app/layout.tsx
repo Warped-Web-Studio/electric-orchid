@@ -8,6 +8,7 @@ import {
 import "./globals.css";
 import Grain from "./components/Grain";
 import Cursor from "./components/Cursor";
+import RevealObserver from "./components/RevealObserver";
 
 const anton = Anton({
   variable: "--font-anton",
@@ -36,6 +37,12 @@ export const metadata: Metadata = {
   title: "Electric Orchid — Tattoo & Fine Line Studio, Portland",
   description:
     "Custom tattoo studio in southeast Portland. Fine line, neo-traditional, blackwork and black & grey realism, drawn for one body only.",
+  // a fictional business — keep it out of every search index
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: { index: false, follow: false },
+  },
 };
 
 export const viewport: Viewport = {
@@ -52,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Grain />
         <Cursor />
         {children}
+        <RevealObserver />
       </body>
     </html>
   );

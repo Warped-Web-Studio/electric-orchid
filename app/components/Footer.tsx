@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import NeonMark from "./NeonMark";
+import DemoTag from "./DemoTag";
 import Reveal from "./Reveal";
-import { footerNote, hours, nav, studio } from "../data/studio";
+import { footerNote, hours, moreLinks, nav, studio } from "../data/studio";
 
 export default function Footer() {
   return (
@@ -49,7 +51,9 @@ export default function Footer() {
 
             {/* find us */}
             <div>
-              <h3 className="label mb-4">Find us</h3>
+              <h3 className="label mb-4 flex items-center gap-3">
+                Find us <DemoTag />
+              </h3>
               <address className="space-y-1 text-sm not-italic text-bone/70">
                 {studio.address.map((line) => (
                   <p key={line}>{line}</p>
@@ -61,7 +65,9 @@ export default function Footer() {
 
             {/* hours */}
             <div>
-              <h3 className="label mb-4">Hours</h3>
+              <h3 className="label mb-4 flex items-center gap-3">
+                Hours <DemoTag />
+              </h3>
               <dl className="space-y-1.5 font-mono text-xs">
                 {hours.map((h) => (
                   <div
@@ -85,7 +91,7 @@ export default function Footer() {
             <div>
               <h3 className="label mb-4">Elsewhere</h3>
               <ul className="text-sm">
-                {nav.map((item) => (
+                {[...nav, ...moreLinks].map((item) => (
                   <li key={item.href}>
                     <a
                       href={item.href}
@@ -97,6 +103,14 @@ export default function Footer() {
                 ))}
                 <li className="flex min-h-11 items-center">
                   <span className="text-bone/70">{studio.instagram}</span>
+                </li>
+                <li>
+                  <Link
+                    href="/credits"
+                    className="inline-flex min-h-11 items-center text-bone/70 transition-colors hover:text-magenta"
+                  >
+                    Photo credits
+                  </Link>
                 </li>
               </ul>
             </div>

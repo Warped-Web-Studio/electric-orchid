@@ -52,7 +52,7 @@ body {
 }
 
 /* one honest focus ring everywhere, since the custom cursor hides the usual cues */
-:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--color-cyan);
   outline-offset: 3px;
   border-radius: 2px;

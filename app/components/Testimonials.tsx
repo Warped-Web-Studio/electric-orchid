@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Reveal from "./Reveal";
+import DemoTag from "./DemoTag";
 import { testimonials } from "../data/studio";
 
 export default function Testimonials() {
@@ -12,13 +13,15 @@ export default function Testimonials() {
             <h2 className="display display-lg mt-3">
               What people say <span className="text-cyan">after</span>
             </h2>
+            <DemoTag className="mt-4">Sample reviews</DemoTag>
 
             <div className="duo duo-hover mt-8 hidden aspect-4/5 rounded-sm border border-bone/10 lg:block">
               <Image
                 src="/img/process-artist.jpg"
                 alt="An artist part-way through a session"
                 fill
-                sizes="30vw"
+                // desktop only (lg:block): 4 of 12 columns, 1400px container
+                sizes="(min-width: 1400px) 405px, 29vw"
                 className="object-cover"
               />
             </div>

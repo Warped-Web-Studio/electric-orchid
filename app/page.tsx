@@ -6,7 +6,9 @@ import Artists from "./components/Artists";
 import Gallery from "./components/Gallery";
 import Flash from "./components/Flash";
 import Testimonials from "./components/Testimonials";
+import Faq from "./components/Faq";
 import Booking from "./components/Booking";
+import Aftercare from "./components/Aftercare";
 import Footer from "./components/Footer";
 
 export default function Home() {
@@ -22,7 +24,9 @@ export default function Home() {
         <Marquee reverse />
         <Flash />
         <Testimonials />
+        <Faq />
         <Booking />
+        <Aftercare />
       </main>
       <Footer />
     </>

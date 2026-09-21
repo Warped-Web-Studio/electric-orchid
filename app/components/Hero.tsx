@@ -1,5 +1,6 @@
 import Image from "next/image";
 import NeonMark from "./NeonMark";
+import DemoTag from "./DemoTag";
 import { hero, studio } from "../data/studio";
 
 export default function Hero() {
@@ -14,7 +15,9 @@ export default function Hero() {
           src="/img/hero-back.jpg"
           alt=""
           fill
-          priority
+          // above the fold on every viewport — the only preloaded image on the
+          // page. (LCP is the headline text; Next 16 renamed `priority` to `preload`.)
+          preload
           sizes="100vw"
           className="object-cover object-center"
         />
@@ -73,8 +76,9 @@ export default function Hero() {
         </div>
 
         <div className="mt-8 hidden items-center justify-between sm:flex">
-          <span className="label">
+          <span className="label flex items-center gap-3">
             {studio.address[0]} · {studio.city}
+            <DemoTag>Demo address</DemoTag>
           </span>
           <span className="flex items-center gap-3 label">
             Scroll

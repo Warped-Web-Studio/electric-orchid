@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Reveal from "./Reveal";
+import DemoTag from "./DemoTag";
 import { artists } from "../data/studio";
 
 const bookingTone: Record<string, string> = {
@@ -20,10 +21,13 @@ export default function Artists() {
                 Four hands <span className="text-magenta">you can</span> trust
               </h2>
             </div>
-            <p className="max-w-sm text-sm leading-relaxed text-bone/65">
-              Residents only — no rotating guest chairs. Pick the person whose
-              work you keep coming back to.
-            </p>
+            <div className="max-w-sm">
+              <p className="text-sm leading-relaxed text-bone/65">
+                Residents only — no rotating guest chairs. Pick the person whose
+                work you keep coming back to.
+              </p>
+              <DemoTag className="mt-3">Fictional artists · stock photos</DemoTag>
+            </div>
           </div>
           <div className="neon-rule mt-8" />
         </Reveal>
@@ -42,7 +46,8 @@ export default function Artists() {
                     src={artist.image}
                     alt={`${artist.name}, ${artist.specialty.toLowerCase()} artist`}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    // 1 → 2 → 4 columns, 20px gutters, 1400px container
+                    sizes="(min-width: 1400px) 320px, (min-width: 1024px) calc(25vw - 35px), (min-width: 640px) calc(50vw - 34px), calc(100vw - 32px)"
                     className="object-cover"
                   />
                   <span

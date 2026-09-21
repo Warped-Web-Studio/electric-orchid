@@ -48,7 +48,8 @@ export default function Studio() {
                     src="/img/studio-antlers.jpg"
                     alt="The front room at Electric Orchid, lit low"
                     fill
-                    sizes="(max-width: 1024px) 100vw, 58vw"
+                    // 7 of 12 columns from lg, capped with the 1400px container
+                    sizes="(min-width: 1400px) 750px, (min-width: 1024px) 54vw, calc(100vw - 32px)"
                     className="object-cover"
                   />
                 </div>
@@ -60,7 +61,8 @@ export default function Studio() {
                       src="/img/studio-room.jpg"
                       alt="Studio floor with the chandelier and the shop bike"
                       fill
-                      sizes="(max-width: 1024px) 45vw, 30vw"
+                      // half-width tile on mobile; 58% of the main photo from lg
+                      sizes="(min-width: 1400px) 435px, (min-width: 1024px) 31vw, calc(50vw - 24px)"
                       className="object-cover"
                     />
                   </div>
@@ -69,7 +71,8 @@ export default function Studio() {
                       src="/img/process-mono.jpg"
                       alt="An artist mid-session"
                       fill
-                      sizes="45vw"
+                      // mobile/tablet only (lg:hidden), so it's never fetched on desktop
+                      sizes="calc(50vw - 24px)"
                       className="object-cover"
                     />
                   </div>

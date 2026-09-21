@@ -34,7 +34,7 @@ export default function Cursor() {
         dot.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
       }
       const over = (e.target as Element | null)?.closest?.(
-        "a, button, input, select, textarea, [data-cursor]",
+        "a, button, input, select, textarea, summary, [data-cursor]",
       );
       ring.current?.classList.toggle("is-hot", Boolean(over));
     };

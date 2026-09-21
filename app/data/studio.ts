@@ -11,8 +11,10 @@ export const studio = {
   city: "Portland, OR",
   address: ["1142 SE Belmont St", "Portland, OR 97214"],
   phone: "(503) 555-0148",
-  email: "ink@electricorchid.studio",
-  instagram: "@electricorchid",
+  // demo contact details: 555-01xx numbers and the .example TLD are reserved
+  // for fiction, so none of these reach a real person
+  email: "ink@electricorchid.example",
+  instagram: "@electricorchid.demo",
 };
 
 export const hero = {
@@ -69,7 +71,7 @@ export type Artist = {
 export const artists: Artist[] = [
   {
     name: "Mara Voss",
-    handle: "@voss.needle",
+    handle: "@mara.electricorchid.demo",
     specialty: "Fine line & botanical",
     bio: "Single-needle work so light it reads like a pencil study. Books out six weeks ahead, every time.",
     tags: ["Fine line", "Botanical", "Micro"],
@@ -80,7 +82,7 @@ export const artists: Artist[] = [
   },
   {
     name: "Silas Kane",
-    handle: "@kaneelectric",
+    handle: "@silas.electricorchid.demo",
     specialty: "Neo-traditional & colour",
     bio: "Heavy black, saturated colour, and a bold line that will still read across a room in thirty years.",
     tags: ["Neo-trad", "Colour", "Large scale"],
@@ -91,7 +93,7 @@ export const artists: Artist[] = [
   },
   {
     name: "June Halloran",
-    handle: "@hallowmark",
+    handle: "@june.electricorchid.demo",
     specialty: "Blackwork & ornamental",
     bio: "Geometry, dotwork and things with teeth. Brings a sketchbook to every consult and fills it.",
     tags: ["Blackwork", "Ornamental", "Dotwork"],
@@ -102,7 +104,7 @@ export const artists: Artist[] = [
   },
   {
     name: "Koa Reyes",
-    handle: "@reyesblackgrey",
+    handle: "@koa.electricorchid.demo",
     specialty: "Black & grey realism",
     bio: "Portraits and back pieces built over multiple sittings. Will talk you out of it if it won't age well.",
     tags: ["Realism", "Black & grey", "Cover-up"],
@@ -123,10 +125,15 @@ export const galleryStyles = [
 
 export type GalleryStyle = (typeof galleryStyles)[number];
 
+/**
+ * Gallery photos are stock images of real people's tattoos, so they carry a
+ * style tag only — never a title or one of our (fictional) artists' names.
+ * Photographer credits live in data/credits.ts.
+ */
 export type Work = {
-  title: string;
-  artist: string;
   style: Exclude<GalleryStyle, "All">;
+  /** describes what's in the photo, since there's no caption to lean on */
+  alt: string;
   image: string;
   width: number;
   height: number;
@@ -134,76 +141,46 @@ export type Work = {
 
 export const gallery: Work[] = [
   {
-    title: "Saturday Morning",
-    artist: "Silas Kane",
-    style: "Neo-trad",
-    image: "/img/work-color-sleeve.jpg",
-    width: 1200,
-    height: 2133,
-  },
-  {
-    title: "Own Terms",
-    artist: "Mara Voss",
     style: "Fine line",
+    alt: "Fine script lettering across the upper back, just below the hairline",
     image: "/img/work-script-neck.jpg",
     width: 1200,
     height: 1800,
   },
   {
-    title: "Hard to Kill",
-    artist: "Mara Voss",
     style: "Fine line",
+    alt: "Fine line heart wreath with hand-lettered text on the back of an upper arm",
     image: "/img/work-fineline-arm.jpg",
     width: 1200,
     height: 1800,
   },
   {
-    title: "Peony, Unfinished",
-    artist: "Mara Voss",
     style: "Fine line",
+    alt: "Fine line peony on the back of a hand",
     image: "/img/work-floral-hand.jpg",
     width: 1200,
     height: 800,
   },
   {
-    title: "Widow's Chest",
-    artist: "June Halloran",
-    style: "Blackwork",
+    style: "Neo-trad",
+    alt: "Spiderweb on the chest being tattooed with a coil machine",
     image: "/img/work-web-chest.jpg",
     width: 1200,
     height: 1800,
   },
   {
-    title: "First Pass",
-    artist: "June Halloran",
     style: "Blackwork",
+    alt: "A single line being pulled along a forearm",
     image: "/img/work-linework.jpg",
     width: 1200,
     height: 800,
   },
   {
-    title: "Throat Work",
-    artist: "Koa Reyes",
     style: "Black & grey",
+    alt: "An arm piece mid-session, gloved hands and a blue-wrapped grip",
     image: "/img/work-neck-blue.jpg",
     width: 1200,
     height: 800,
-  },
-  {
-    title: "Cathedral",
-    artist: "Koa Reyes",
-    style: "Black & grey",
-    image: "/img/artist-koa.jpg",
-    width: 1200,
-    height: 1800,
-  },
-  {
-    title: "Session Three",
-    artist: "Silas Kane",
-    style: "Neo-trad",
-    image: "/img/process-leg.jpg",
-    width: 1400,
-    height: 933,
   },
 ];
 
@@ -284,6 +261,43 @@ export const booking = {
     "Not sure yet",
   ],
   sizes: ['Under 3"', '3"–6"', '6"–10"', "Sleeve / back piece"],
+  budgets: [
+    "Under $250",
+    "$250 – $500",
+    "$500 – $1,000",
+    "$1,000 – $2,500",
+    "$2,500+",
+    "Not sure yet",
+  ],
+  availability: [
+    "Tue – Wed, by appointment",
+    "Thu – Fri afternoons",
+    "Thu – Fri evenings",
+    "Weekends",
+    "Anytime — I'm flexible",
+  ],
+  maxReferences: 5,
+  /** demo deposit per size bucket, in dollars — comes off the final price */
+  deposits: {
+    'Under 3"': 50,
+    '3"–6"': 100,
+    '6"–10"': 150,
+    "Sleeve / back piece": 300,
+  } as Record<string, number>,
+  demoNote: "Demo booking — no real appointment is made",
+  waiver: {
+    label: "Sample consent form",
+    intro:
+      "The real one gets signed at the studio, on paper, with your ID on the counter. This is what it covers.",
+    points: [
+      "I'm 18 or older, and I'll bring photo ID to the appointment.",
+      "I won't turn up drunk or high. If I do, the session doesn't happen and the deposit goes with it.",
+      "I've told my artist about anything that affects healing — medication, allergies, skin conditions, pregnancy.",
+      "I understand a tattoo is permanent, and that how it heals depends on the aftercare I do at home.",
+      "I'll sign off on the final design and placement before the needle starts, and not after.",
+      "My deposit comes off the final price. With 48 hours' notice it moves to a new date; inside that, it's gone.",
+    ],
+  },
 };
 
 export const hours = [
@@ -303,6 +317,103 @@ export const nav = [
   { label: "Flash", href: "#flash" },
   { label: "Book", href: "#book" },
 ];
+
+/** footer-only links, so the top bar stays five items wide */
+export const moreLinks = [
+  { label: "FAQ", href: "#faq" },
+  { label: "Aftercare", href: "#aftercare" },
+];
+
+export const faq = {
+  label: "Before you book",
+  script: "No surprises.",
+  heading: ["House", "rules"],
+  blurb:
+    "The things people ask at the counter, answered before you get to the counter.",
+  items: [
+    {
+      q: "Deposits",
+      a: [
+        "Every booking takes one — $50 for something under three inches, up to $300 for a sleeve or back piece. Flash too.",
+        "It comes off the final price. It's also how we know you're actually coming.",
+      ],
+    },
+    {
+      q: "Cancelling or moving a date",
+      a: [
+        "Give us 48 hours and your deposit moves to the new date, once. Inside 48 hours, or a no-show, and it's gone — someone else could have had that chair.",
+        "Running late? Text us. Past thirty minutes we may have to reschedule.",
+      ],
+    },
+    {
+      q: "Shop minimum",
+      a: [
+        "$120, however small. That covers a fresh setup — needles, ink caps, barrier film — all of it thrown out when you leave.",
+        "A single initial costs what a small flash piece costs. We won't pretend otherwise.",
+      ],
+    },
+    {
+      q: "ID and age",
+      a: [
+        "18 and up, no exceptions. Not with a parent, not with a note.",
+        "Bring government photo ID that matches the name on the booking. No ID, no tattoo, and the deposit stays with us.",
+      ],
+    },
+    {
+      q: "Touch-ups",
+      a: [
+        "Our work gets one free touch-up inside three months, once it's fully healed.",
+        "Hands, fingers and feet fade faster than anywhere else, so those are charged at cost. Skipping aftercare voids it — we can tell.",
+      ],
+    },
+    {
+      q: "Walk-ins",
+      a: [
+        "Thursday to Sunday, first come, first served, while there's an artist free.",
+        "Walk-ins are for flash and small pieces we can draw on the spot. Anything bigger starts with a consult. Come early on Saturdays.",
+      ],
+    },
+  ],
+};
+
+export const aftercare = {
+  label: "After",
+  script: "Heal it right.",
+  heading: ["Aftercare"],
+  blurb:
+    "The artist does half the work. The next four weeks are yours — and they decide what it looks like in ten years.",
+  stages: [
+    {
+      when: "Day 0",
+      title: "Leave the wrap on",
+      body: "Keep the film on as long as your artist said — usually 3 to 24 hours. Peel it off in the shower, wash with lukewarm water and unscented soap, pat dry with a clean paper towel.",
+    },
+    {
+      when: "Days 1 – 3",
+      title: "Wash, dry, go thin",
+      body: "Wash twice a day with clean hands. Let it air dry, then a rice grain of unscented balm, rubbed in until it barely shines. Some weeping and redness is normal.",
+    },
+    {
+      when: "Days 4 – 14",
+      title: "Let it peel",
+      body: "It will flake and it will itch. Don't pick, don't scratch, don't help it along. Swap the balm for plain unscented lotion once it starts to flake.",
+    },
+    {
+      when: "Weeks 2 – 4",
+      title: "Wait it out",
+      body: "The surface looks healed before the skin underneath is. Keep it moisturised, keep it covered in the sun, and keep going.",
+    },
+  ],
+  avoid: [
+    "Swimming, baths and hot tubs for two weeks",
+    "Direct sun and sunbeds until it's healed — SPF 50 for life after",
+    "Tight clothes or straps rubbing on it",
+    "Petroleum jelly, and anything scented",
+  ],
+  warning:
+    "Redness that spreads, heat, swelling that gets worse after day three, or a fever — see a doctor first, then tell us.",
+  disclaimer: "General guidance, not medical advice",
+};
 
 export const footerNote =
   "Electric Orchid is a fictional studio built as a portfolio mockup. Nothing here is a real business, and no booking is actually sent.";

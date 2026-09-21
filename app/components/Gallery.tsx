@@ -5,6 +5,15 @@ import { useCallback, useEffect, useState } from "react";
 import Reveal from "./Reveal";
 import { gallery, galleryStyles, type GalleryStyle } from "../data/studio";
 
+/**
+ * The lightbox image is capped by the 896px frame *and* by 68svh of height,
+ * so a portrait photo on a wide screen renders far narrower than the frame.
+ */
+function lightboxSizes(width: number, height: number) {
+  if (height > width) return `${Math.round((68 * width) / height)}vh`;
+  return "(min-width: 960px) 896px, calc(100vw - 32px)";
+}
+
 export default function Gallery() {
   const [filter, setFilter] = useState<GalleryStyle>("All");
   const [openAt, setOpenAt] = useState<number | null>(null);
@@ -82,26 +91,26 @@ export default function Gallery() {
         <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
           {shown.map((work, i) => (
             <button
-              key={work.image + work.title}
+              key={work.image}
               type="button"
               onClick={() => setOpenAt(i)}
               className="sweep group mb-4 block w-full break-inside-avoid overflow-hidden rounded-sm border border-bone/10 text-left"
-              aria-label={`Open ${work.title} by ${work.artist}`}
+              aria-label={`Enlarge: ${work.alt}`}
             >
               <span className="duo duo-hover block">
                 <Image
                   src={work.image}
-                  alt={`${work.title} — ${work.style} by ${work.artist}`}
+                  alt={work.alt}
                   width={work.width}
                   height={work.height}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  // masonry: 1 → 2 → 3 columns, 16px gutters, 1400px container
+                  sizes="(min-width: 1400px) 430px, (min-width: 1024px) calc(33vw - 37px), (min-width: 640px) calc(50vw - 32px), calc(100vw - 32px)"
                   className="h-auto w-full"
                 />
               </span>
-              <span className="flex items-baseline justify-between gap-3 px-4 py-3.5">
-                <span className="display text-lg">{work.title}</span>
+              <span className="flex px-4 py-3.5">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ash">
-                  {work.artist}
+                  {work.style}
                 </span>
               </span>
             </button>
@@ -115,7 +124,7 @@ export default function Gallery() {
           className="fixed inset-0 z-[70] flex items-center justify-center bg-void/95 p-4 backdrop-blur-xl sm:p-8"
           role="dialog"
           aria-modal="true"
-          aria-label={`${active.title} by ${active.artist}`}
+          aria-label={active.alt}
           onClick={() => setOpenAt(null)}
         >
           <div
@@ -124,20 +133,17 @@ export default function Gallery() {
           >
             <Image
               src={active.image}
-              alt={`${active.title} — ${active.style} by ${active.artist}`}
+              alt={active.alt}
               width={active.width}
               height={active.height}
-              sizes="(max-width: 1024px) 92vw, 60vw"
+              sizes={lightboxSizes(active.width, active.height)}
               className="max-h-[68svh] w-auto rounded-sm border border-bone/15 object-contain"
             />
 
             <div className="mt-5 flex w-full items-center justify-between gap-4">
-              <div>
-                <p className="display text-2xl">{active.title}</p>
-                <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.16em] text-ash">
-                  {active.style} · {active.artist}
-                </p>
-              </div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ash">
+                {active.style} · {(openAt ?? 0) + 1} / {shown.length}
+              </p>
               <div className="flex gap-2">
                 <button
                   type="button"
