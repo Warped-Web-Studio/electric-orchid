@@ -1,26 +1,425 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── palette ─────────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-void: #07050e;
+  --color-ink: #0e0a1b;
+  --color-slab: #16102a;
+  --color-bone: #ede9f5;
+  --color-ash: #9a91b4;
+  --color-magenta: #ff2d95;
+  --color-cyan: #24e0ff;
+  --color-gold: #ffc24b;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-anton);
+  --font-script: var(--font-doulaise);
+  --font-sans: var(--font-grotesk);
+  --font-mono: var(--font-space-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── base ────────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* the sticky nav shouldn't sit on top of anchored sections */
+  scroll-padding-top: 5rem;
+  background: var(--color-void);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  /* huge type + full-bleed art: never let a stray pixel start a sideways scroll */
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-magenta);
+  color: var(--color-void);
+}
+
+/* one honest focus ring everywhere, since the custom cursor hides the usual cues */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@layer components {
+  /* ── fluid display type ───────────────────────────────────────────────── */
+
+  .display {
+    font-family: var(--font-anton), ui-sans-serif, sans-serif;
+    font-weight: 400;
+    line-height: 0.85;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    /* break instead of overflowing when a long word meets a 390px screen */
+    overflow-wrap: break-word;
+  }
+
+  .display-hero {
+    font-size: clamp(3.25rem, 15vw, 12rem);
+  }
+
+  .display-xl {
+    font-size: clamp(2.5rem, 9vw, 6.5rem);
+  }
+
+  .display-lg {
+    font-size: clamp(2rem, 6vw, 4rem);
+  }
+
+  /* for headings that sit in a narrow column — keeps phrases on one line
+     there without shrinking the full-width headings */
+  .display-col {
+    font-size: clamp(2.5rem, 6.4vw, 4.5rem);
+  }
+
+  .script {
+    font-family: var(--font-doulaise), cursive;
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .label {
+    font-family: var(--font-space-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-ash);
+  }
+
+  /* ── neon ─────────────────────────────────────────────────────────────── */
+
+  .neon-text {
+    color: #fff;
+    text-shadow:
+      0 0 4px rgba(255, 255, 255, 0.85),
+      0 0 12px var(--color-magenta),
+      0 0 32px var(--color-magenta),
+      0 0 72px rgba(255, 45, 149, 0.55);
+  }
+
+  .neon-text-cyan {
+    color: #fff;
+    text-shadow:
+      0 0 4px rgba(255, 255, 255, 0.85),
+      0 0 12px var(--color-cyan),
+      0 0 32px var(--color-cyan),
+      0 0 72px rgba(36, 224, 255, 0.5);
+  }
+
+  /* headline split into magenta/cyan ghosts — the signature move */
+  .chroma {
+    position: relative;
+    color: var(--color-bone);
+    text-shadow:
+      -0.02em 0 0 rgba(255, 45, 149, 0.75),
+      0.02em 0 0 rgba(36, 224, 255, 0.75);
+    animation: chroma-drift 6s ease-in-out infinite;
+  }
+
+  .neon-rule {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-magenta),
+      var(--color-cyan),
+      transparent
+    );
+    box-shadow: 0 0 12px rgba(255, 45, 149, 0.6);
+  }
+
+  /* ── surfaces ─────────────────────────────────────────────────────────── */
+
+  .panel {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0)),
+      var(--color-ink);
+    border: 1px solid rgba(237, 233, 245, 0.09);
+  }
+
+  /* a light sweeps the border on hover/focus */
+  .sweep {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .sweep::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      130deg,
+      transparent 20%,
+      var(--color-magenta),
+      var(--color-cyan),
+      transparent 80%
+    );
+    background-size: 220% 220%;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .sweep:hover::after,
+  .sweep:focus-within::after {
+    opacity: 1;
+    animation: sweep-pan 2.4s linear infinite;
+  }
+
+  /* ── duotone photography ──────────────────────────────────────────────── */
+
+  .duo {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .duo img {
+    filter: grayscale(1) contrast(1.15) brightness(0.85);
+    transition:
+      filter 0.7s var(--ease-out-expo),
+      transform 0.9s var(--ease-out-expo);
+  }
+
+  .duo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(145deg, #ff2d95 0%, #7a2bd6 48%, #24e0ff 100%);
+    mix-blend-mode: color;
+    opacity: 0.85;
+    transition: opacity 0.7s var(--ease-out-expo);
+    pointer-events: none;
+  }
+
+  .duo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: radial-gradient(
+      120% 90% at 50% 100%,
+      rgba(7, 5, 14, 0.75),
+      transparent 65%
+    );
+    pointer-events: none;
+  }
+
+  /* touch devices get the colour resolved on tap via :active, and keyboard via focus */
+  .duo-hover:hover img,
+  .duo-hover:focus-within img,
+  .duo-hover:active img {
+    filter: grayscale(0) contrast(1.02) brightness(1);
+    transform: scale(1.04);
+  }
+
+  .duo-hover:hover::before,
+  .duo-hover:focus-within::before,
+  .duo-hover:active::before {
+    opacity: 0.12;
+  }
+
+  /* a checkbox that belongs in a dark room */
+  .check {
+    appearance: none;
+    -webkit-appearance: none;
+    display: grid;
+    place-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border: 1px solid rgba(237, 233, 245, 0.28);
+    border-radius: 3px;
+    background: var(--color-ink);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .check::before {
+    content: "";
+    width: 0.7rem;
+    height: 0.7rem;
+    transform: scale(0);
+    transition: transform 0.15s var(--ease-out-expo);
+    background: var(--color-void);
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  }
+
+  .check:checked {
+    background: var(--color-magenta);
+    border-color: var(--color-magenta);
+  }
+
+  .check:checked::before {
+    transform: scale(1);
+  }
+
+  /* ── scroll reveal ────────────────────────────────────────────────────── */
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.9s var(--ease-out-expo),
+      transform 0.9s var(--ease-out-expo);
+  }
+
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── keyframes ───────────────────────────────────────────────────────────── */
+
+@keyframes chroma-drift {
+  0%,
+  100% {
+    text-shadow:
+      -0.02em 0 0 rgba(255, 45, 149, 0.75),
+      0.02em 0 0 rgba(36, 224, 255, 0.75);
+  }
+  50% {
+    text-shadow:
+      -0.035em 0.006em 0 rgba(255, 45, 149, 0.85),
+      0.035em -0.006em 0 rgba(36, 224, 255, 0.85);
+  }
+}
+
+@keyframes sweep-pan {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 220% 50%;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* irregular, like a tube that hasn't warmed up yet */
+@keyframes flicker {
+  0%,
+  17%,
+  20%,
+  50%,
+  53%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px currentColor) drop-shadow(0 0 18px currentColor);
+  }
+  18%,
+  51% {
+    opacity: 0.32;
+    filter: none;
+  }
+  19%,
+  52% {
+    opacity: 0.78;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(-60%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(160%);
+    opacity: 0;
+  }
+}
+
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+.animate-flicker {
+  animation: flicker 4.5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3.2s ease-in-out infinite;
+}
+
+.animate-scroll-hint {
+  animation: scroll-hint 2.4s ease-in-out infinite;
+}
+
+/* ── reduced motion: kill every loop, keep every layout ──────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* a marquee that can't move should still read as a full line */
+  .animate-marquee {
+    animation: none;
+  }
 }
